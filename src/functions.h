@@ -6,6 +6,14 @@ float temperature=45.3;
 JsonDocument doc;
 
 
+// convert float to char array
+void floatToCharArray(float val, int width, int prec, char* output) {
+  char temp[32];
+  dtostrf(val, width, prec, temp);
+  strcpy(output, temp);
+}
+
+
 void get_all_data() {
   WiFiClient client;
   HTTPClient http;
@@ -30,7 +38,10 @@ void get_all_data() {
         Sensors.switch_01 = doc["switch_01"];
         Sensors.set_temp = doc["set_temp"];
         Sensors.Temp = doc["Temp"];
-        Sensors.set_temp_val = doc["set_temp"];
+        Sensors.set_temp_val = doc["set_temp_val"];
+        // float to char array
+        // dtostrf(doc["set_temp_display"], 10, 2, Sensors.set_temp_display);
+        floatToCharArray(doc["set_temp_display"], 10, 2, Sensors.set_temp_display);
         Sensors.connect_flag = doc["connect_flag"];
 
         // Apply changes coming from sensors (from python server) to app

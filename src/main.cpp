@@ -42,12 +42,20 @@
 
 // RemoteXY GUI configuration  
 #pragma pack(push, 1)  
-uint8_t RemoteXY_CONF[] =   // 94 bytes
-  { 255,7,0,12,0,87,0,17,0,0,0,31,1,106,200,3,1,0,0,6,
-  0,2,12,12,31,18,0,2,26,31,31,79,78,0,79,70,70,0,4,3,
-  70,72,15,128,2,26,7,11,45,40,10,44,2,26,2,4,66,8,88,86,
-  10,129,2,26,67,74,71,29,14,6,25,31,11,10,5,167,24,24,48,4,
-  26,31,79,78,0,31,79,70,70,0,0,0,0,0 };
+uint8_t RemoteXY_CONF[] =   // 250 bytes
+  { 255,8,0,23,0,243,0,17,0,0,0,26,1,106,200,3,1,0,0,9,
+  0,2,6,23,31,13,0,2,26,31,31,79,78,0,79,70,70,0,4,1,
+  62,82,13,128,2,30,7,5,45,32,11,8,30,26,4,66,2,81,101,11,
+  129,178,27,67,83,63,22,11,6,30,26,11,131,24,3,23,8,3,27,29,
+  31,80,97,103,101,32,49,0,38,131,2,3,21,8,3,27,29,31,77,97,
+  105,110,0,41,131,48,3,23,8,3,27,29,31,80,97,103,101,32,50,0,
+  26,67,20,119,31,16,4,2,26,11,4,0,1,9,20,24,24,0,2,31,
+  0,131,2,3,21,8,3,28,30,31,77,97,105,110,0,41,131,24,3,23,
+  8,3,28,30,31,80,97,103,101,32,49,0,38,131,48,3,23,8,3,28,
+  30,31,80,97,103,101,32,50,0,26,4,0,1,12,12,24,24,0,2,31,
+  0,131,2,3,21,8,3,28,30,31,77,97,105,110,0,41,131,24,3,23,
+  8,3,28,30,31,80,97,103,101,32,49,0,38,131,48,3,23,8,3,28,
+  30,31,80,97,103,101,32,50,0,26 };
   
 // this structure defines all the variables and events of your control interface 
 struct {
@@ -56,15 +64,18 @@ struct {
   uint8_t switch_01; // =1 if switch ON and =0 if OFF
   int8_t set_temp; // from 0 to 100
   float Temp;
+  uint8_t button_01; // =1 if button pressed, else =0
+  uint8_t button_02; // =1 if button pressed, else =0
 
     // output variables
   int8_t set_temp_val; // from 0 to 100
   char set_temp_display[11]; // string UTF8 end zero
+  char text_01[11]; // string UTF8 end zero
 
     // other variable
   uint8_t connect_flag;  // =1 if wire connected, else =0
 
-} RemoteXY, Sensors;  
+} RemoteXY, Sensors;   
 #pragma pack(pop)
  
 /////////////////////////////////////////////
@@ -86,6 +97,7 @@ void setup()
   ConnectWifi();
   get_all_data();
   RemoteXY = Sensors;
+
 }
 
 void loop() 
@@ -99,19 +111,21 @@ void loop()
   RemoteXY_delay(50);
 
   // RemoteXY.set_temp_display = RemoteXY.set_temp;
-  dtostrf(RemoteXY.set_temp, 4, 2, RemoteXY.set_temp_display);
+  // float to char array
+  // dtostrf(RemoteXY.set_temp, 10, 2, RemoteXY.set_temp_display);
+  floatToCharArray(RemoteXY.set_temp, 10, 2, RemoteXY.set_temp_display);
   // RemoteXY.set_temp_display = dtostrf(RemoteXY.set_temp, , 0);
   RemoteXY.Temp = RemoteXY.set_temp;
 
 
-  Serial.printf("doc Temperature: %f slider temp: %f", Sensors.set_temp, RemoteXY.set_temp);
+  // Serial.printf("doc Temperature: %f slider temp: %f", Sensors.set_temp, RemoteXY.set_temp);
   Serial.println();
 
 
   // apply changes for App Outputs - only need to do this for controls
   if (Sensors.set_temp != RemoteXY.set_temp) {
     Serial.println("setting temperature value");
-    set_value("set_temp_val", String(RemoteXY.set_temp_val));
+    set_value("set_temp_display", String(RemoteXY.set_temp));
     set_value("set_temp", String(RemoteXY.set_temp));
     // set_value("Temp", String(RemoteXY.Temp));
     // RemoteXY.Temp = Sensors.Temp;
