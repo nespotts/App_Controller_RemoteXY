@@ -28,7 +28,6 @@ void loop()
   // TODO you loop code
   // use the RemoteXY structure for data transfer
   // do not call delay(), use instead RemoteXY_delay() 
-  RemoteXY_delay(50);
 
   get_all_data();
 
