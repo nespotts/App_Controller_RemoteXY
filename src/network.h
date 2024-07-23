@@ -31,6 +31,6 @@ void ConnectWifi() {
     }
   }
 
-  Serial.println("\nConnected to wifi");
+  Serial.println("\nConnected to WiFi");
   printWifiStatus();
 }
