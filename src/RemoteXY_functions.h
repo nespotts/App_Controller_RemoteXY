@@ -264,22 +264,25 @@ struct {
 String mainURL ="http://192.168.8.148";
 JsonDocument doc;
 
-long currenttime = 0;
-long get_data_timer = 0;
-long get_data_interval = 500; // ms
 
+long currenttime = 0;
 
 
 class ApiAppController {
 
   public:
+    long get_data_timer = 0;
+    long get_data_interval = 250; // ms
 
     ApiAppController() {
       // constructor
     }
 
     void run() {
-      get_all_data();
+      if ((currenttime - get_data_timer) >= get_data_interval) {
+        get_all_data();
+        get_data_timer = currenttime;
+      }
       RemoteXY_callbacks();
     }
 
@@ -354,6 +357,11 @@ class ApiAppController {
 
       calculateBatteryTotals(doc);
 
+      Sensors.booster_power = doc["booster_power"];
+      Sensors.water_heater = doc["water_heater"];
+      Sensors.inverter = doc["inverter"];
+      Sensors.solar_fan = doc["solar_fan"];
+      Sensors.exhaust_fan = doc["exhaust_fan"];
       Sensors.booster_power_feedback = doc["booster_power_feedback"];
 
       Sensors.connect_flag = doc["connect_flag"];
@@ -481,37 +489,42 @@ class ApiAppController {
       strcpy(RemoteXY.battery_state_of_charge_percent2, Sensors.battery_state_of_charge_percent2);
       strcpy(RemoteXY.battery_power, Sensors.battery_power);
 
+      // Internet controls feedback
       RemoteXY.booster_power_feedback = Sensors.booster_power_feedback;
     }
 
 
   // apply changes for App Outputs - only need to do this for controls
   void RemoteXY_callbacks() {
-    // if (Sensors.set_temp != RemoteXY.set_temp) {
-    //   Serial.println("setting temperature value");
-    //   set_value("set_temp_display", String(RemoteXY.set_temp));
-    //   set_value("set_temp", String(RemoteXY.set_temp));
-    //   // set_value("Temp", String(RemoteXY.Temp));
-    //   // RemoteXY.Temp = Sensors.Temp;
-    //   Sensors = RemoteXY;
-    // }
-
     if (Sensors.booster_power != RemoteXY.booster_power) {
       set_value("booster_power", String(RemoteXY.booster_power));
       Sensors.booster_power = RemoteXY.booster_power;
     }
 
+    if (Sensors.water_heater != RemoteXY.water_heater) {
+      set_value("water_heater", String(RemoteXY.water_heater));
+      Sensors.water_heater = RemoteXY.water_heater;
+    }
 
+    if (Sensors.inverter != RemoteXY.inverter) {
+      set_value("inverter", String(RemoteXY.inverter));
+      Sensors.inverter = RemoteXY.inverter;
+    }
+
+    if (Sensors.solar_fan != RemoteXY.solar_fan) {
+      set_value("solar_fan", String(RemoteXY.solar_fan));
+      Sensors.solar_fan = RemoteXY.solar_fan;
+    }
+
+    if (Sensors.exhaust_fan != RemoteXY.exhaust_fan) {
+      set_value("exhaust_fan", String(RemoteXY.exhaust_fan));
+      Sensors.exhaust_fan = RemoteXY.exhaust_fan;
+    }
   }
 
 
 
     void get_all_data() {
-      if ((currenttime - get_data_timer) < get_data_interval) {
-        return;
-      }
-      get_data_timer = currenttime;
-
       WiFiClient client;
       HTTPClient http;
 

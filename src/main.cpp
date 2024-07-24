@@ -30,7 +30,6 @@ void loop()
   // use the RemoteXY structure for data transfer
   // do not call delay(), use instead RemoteXY_delay() 
 
-
   api.run();
 }
 
