@@ -5,6 +5,8 @@
 #include "RemoteXY_functions.h"
 #include "RemoteXY_Writes.h"
 
+ApiAppController api;
+
 
 void setup() 
 {
@@ -14,7 +16,7 @@ void setup()
   Serial.begin(115200);
   
   ConnectWifi();
-  get_all_data();
+  api.get_all_data();
   RemoteXY = Sensors;
 
 }
@@ -29,8 +31,8 @@ void loop()
   // use the RemoteXY structure for data transfer
   // do not call delay(), use instead RemoteXY_delay() 
 
-  get_all_data();
 
+  api.get_all_data();
 
   // apply changes for App Outputs - only need to do this for controls
   RemoteXY_callbacks();
