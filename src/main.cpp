@@ -3,7 +3,6 @@
 
 #include "network.h"
 #include "RemoteXY_functions.h"
-#include "RemoteXY_Writes.h"
 
 ApiAppController api;
 
@@ -32,9 +31,6 @@ void loop()
   // do not call delay(), use instead RemoteXY_delay() 
 
 
-  api.get_all_data();
-
-  // apply changes for App Outputs - only need to do this for controls
-  RemoteXY_callbacks();
+  api.run();
 }
 

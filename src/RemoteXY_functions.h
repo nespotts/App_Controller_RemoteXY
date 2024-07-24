@@ -38,8 +38,8 @@
 
 // RemoteXY GUI configuration  
 #pragma pack(push, 1)  
-uint8_t RemoteXY_CONF[] =   // 2206 bytes
-  { 255,1,0,135,1,151,8,17,0,0,0,26,1,106,200,4,1,0,0,0,
+uint8_t RemoteXY_CONF[] =   // 2388 bytes
+  { 255,6,0,136,1,77,9,17,0,0,0,26,1,106,200,4,1,0,0,0,
   31,0,130,1,84,104,22,1,26,130,1,60,104,22,1,26,130,1,12,104,
   46,1,26,66,4,23,73,11,129,178,27,131,24,2,20,8,3,27,29,31,
   66,77,83,0,166,131,2,2,21,8,3,27,29,31,77,97,105,110,0,169,
@@ -146,16 +146,30 @@ uint8_t RemoteXY_CONF[] =   // 2206 bytes
   8,3,27,30,31,77,97,105,110,0,169,131,24,2,20,8,3,27,30,31,
   66,77,83,0,166,131,66,2,25,8,3,27,30,31,67,111,110,116,114,111,
   108,115,0,106,131,45,2,20,8,3,27,30,31,83,111,108,97,114,0,154,
-  4,0,131,2,2,21,8,3,27,30,31,77,97,105,110,0,169,131,24,2,
+  15,0,131,2,2,21,8,3,27,30,31,77,97,105,110,0,169,131,24,2,
   20,8,3,27,30,31,66,77,83,0,166,131,66,2,25,8,3,27,30,31,
   67,111,110,116,114,111,108,115,0,106,131,45,2,20,8,3,27,30,31,83,
-  111,108,97,114,0,154 };
+  111,108,97,114,0,154,10,34,19,17,17,48,65,149,31,79,78,0,31,79,
+  70,70,0,70,54,19,17,17,16,26,178,0,129,38,13,27,5,16,67,101,
+  108,108,32,66,111,111,115,116,101,114,0,10,6,47,17,17,48,65,149,31,
+  79,78,0,31,79,70,70,0,10,32,47,17,17,48,65,149,31,79,78,0,
+  31,79,70,70,0,10,57,47,17,17,48,65,149,31,79,78,0,31,79,70,
+  70,0,10,82,47,17,17,48,65,149,31,79,78,0,31,79,70,70,0,129,
+  3,41,24,4,16,87,97,116,101,114,32,72,101,97,116,101,114,0,129,34,
+  41,14,4,16,73,110,118,101,114,116,101,114,0,129,56,41,19,4,16,83,
+  111,108,97,114,32,70,97,110,115,0,129,80,41,22,4,16,69,120,104,97,
+  117,115,116,32,70,97,110,0 };
   
 // this structure defines all the variables and events of your control interface 
 struct {
 
     // input variables
   uint8_t button_02; // =1 if button pressed, else =0
+  uint8_t booster_power; // =1 if state is ON, else =0
+  uint8_t water_heater; // =1 if state is ON, else =0
+  uint8_t inverter; // =1 if state is ON, else =0
+  uint8_t solar_fan; // =1 if state is ON, else =0
+  uint8_t exhaust_fan; // =1 if state is ON, else =0
 
     // output variables
   int8_t battery_state_of_charge_percent; // from 0 to 100
@@ -231,6 +245,7 @@ struct {
   char bms3_battery_temp[6]; // string UTF8 end zero
   char bms3_bms_temp[6]; // string UTF8 end zero
   char bms3_max_cell_delta[7]; // string UTF8 end zero
+  uint8_t booster_power_feedback; // from 0 to 1
 
     // other variable
   uint8_t connect_flag;  // =1 if wire connected, else =0
@@ -261,6 +276,11 @@ class ApiAppController {
 
     ApiAppController() {
       // constructor
+    }
+
+    void run() {
+      get_all_data();
+      RemoteXY_callbacks();
     }
 
 
@@ -333,6 +353,8 @@ class ApiAppController {
       floatToCharArray(Sensors.bms3_max_cell_delta, doc["bms3_max_cell_delta"]);
 
       calculateBatteryTotals(doc);
+
+      Sensors.booster_power_feedback = doc["booster_power_feedback"];
 
       Sensors.connect_flag = doc["connect_flag"];
     }
@@ -458,7 +480,29 @@ class ApiAppController {
       RemoteXY.battery_state_of_charge_percent = Sensors.battery_state_of_charge_percent;
       strcpy(RemoteXY.battery_state_of_charge_percent2, Sensors.battery_state_of_charge_percent2);
       strcpy(RemoteXY.battery_power, Sensors.battery_power);
+
+      RemoteXY.booster_power_feedback = Sensors.booster_power_feedback;
     }
+
+
+  // apply changes for App Outputs - only need to do this for controls
+  void RemoteXY_callbacks() {
+    // if (Sensors.set_temp != RemoteXY.set_temp) {
+    //   Serial.println("setting temperature value");
+    //   set_value("set_temp_display", String(RemoteXY.set_temp));
+    //   set_value("set_temp", String(RemoteXY.set_temp));
+    //   // set_value("Temp", String(RemoteXY.Temp));
+    //   // RemoteXY.Temp = Sensors.Temp;
+    //   Sensors = RemoteXY;
+    // }
+
+    if (Sensors.booster_power != RemoteXY.booster_power) {
+      set_value("booster_power", String(RemoteXY.booster_power));
+      Sensors.booster_power = RemoteXY.booster_power;
+    }
+
+
+  }
 
 
 
