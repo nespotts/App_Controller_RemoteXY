@@ -39,7 +39,7 @@
 // RemoteXY GUI configuration  
 #pragma pack(push, 1)  
 uint8_t RemoteXY_CONF[] =   // 3509 bytes
-  { 255,5,0,67,2,174,13,17,0,0,0,26,1,106,200,5,1,0,0,0,
+  { 255,5,0,67,2,174,13,17,0,0,0,25,1,106,200,5,1,0,0,0,
   0,41,0,130,1,108,104,21,1,26,130,1,84,104,22,1,26,130,1,60,
   104,22,1,26,130,1,12,104,46,1,26,66,4,23,73,11,129,178,27,131,
   22,2,18,8,3,27,29,31,66,77,83,0,166,2,131,2,2,19,8,3,
@@ -204,14 +204,14 @@ uint8_t RemoteXY_CONF[] =   // 3509 bytes
   2,131,60,2,26,8,3,27,29,31,67,111,110,116,114,111,108,115,0,106,
   2,131,41,2,18,8,3,27,29,31,83,111,108,97,114,0,154,2,131,87,
   2,17,8,3,27,29,31,84,101,109,112,0,170,1,129,8,31,19,3,16,
-  73,110,118,101,114,116,101,114,32,84,101,109,112,0,67,5,34,20,9,5,
+  73,110,118,101,114,116,101,114,32,84,101,109,112,0,67,5,34,20,9,1,
   35,26,11,129,25,36,5,5,35,194,176,70,0,129,8,17,21,3,16,73,
-  110,115,105,100,101,32,82,86,32,84,101,109,112,0,67,5,20,20,9,5,
-  35,26,11,129,25,22,5,5,35,194,176,70,0,129,39,17,19,3,16,79,
-  117,116,115,105,100,101,32,84,101,109,112,0,67,37,20,20,9,5,35,26,
+  110,115,105,100,101,32,82,86,32,84,101,109,112,0,67,5,20,20,9,1,
+  35,25,11,129,25,22,5,5,35,194,176,70,0,129,39,17,19,3,16,79,
+  117,116,115,105,100,101,32,84,101,109,112,0,67,37,20,20,9,1,35,26,
   11,129,57,22,5,5,35,194,176,70,0,129,68,17,32,3,16,69,108,101,
   99,116,114,105,99,97,108,32,67,97,98,105,110,101,116,32,84,101,109,112,
-  0,67,70,20,20,9,5,35,26,11,129,90,22,5,5,35,194,176,70,0,
+  0,67,70,20,20,9,1,35,26,11,129,90,22,5,5,35,194,176,70,0,
   68,1,50,104,85,36,8,36,135,94,204,73,110,115,105,100,101,0,79,117,
   116,115,105,100,101,0,69,108,101,99,46,32,67,97,98,105,110,101,116,0,
   73,110,118,101,114,116,101,114,0 };
@@ -435,8 +435,10 @@ class ApiAppController {
       floatToCharArray(Sensors.bms3_bms_temp, doc["bms3_bms_temp"], 2);
       floatToCharArray(Sensors.bms3_max_cell_delta, doc["bms3_max_cell_delta"]);
 
+      // battery totals
       calculateBatteryTotals(doc);
 
+      // controls
       Sensors.booster_power = doc["booster_power"];
       Sensors.water_heater = doc["water_heater"];
       Sensors.inverter = doc["inverter"];
@@ -447,6 +449,7 @@ class ApiAppController {
       floatToCharArray(Sensors.inverter_current, doc["inverter_current"], 2);
       floatToCharArray(Sensors.dc_dc_current, doc["dc_dc_current"], 2);
 
+      // temps
       floatToCharArray(Sensors.inverter_temp, doc["inverter_temp"], 2);
       floatToCharArray(Sensors.inside_temperature, doc["inside_temperature"], 2);
       floatToCharArray(Sensors.outside_temperature, doc["outside_temperature"], 2);
@@ -456,6 +459,7 @@ class ApiAppController {
       Sensors.onlineGraph_02_outside_temp = doc["outside_temperature"];
       Sensors.onlineGraph_02_electrical_temp = doc["electrical_cabinet_temperature"];
 
+      // SOLAR
       floatToCharArray(Sensors.solar1_voltage, doc["solar1_voltage"], 2);
       floatToCharArray(Sensors.solar1_battery_current, doc["solar1_battery_current"], 2);
       floatToCharArray(Sensors.solar1_power, doc["solar1_power"], 1);
@@ -515,7 +519,22 @@ class ApiAppController {
       Sensors.battery_state_of_charge_percent = soc_percent;
       floatToCharArray(Sensors.battery_state_of_charge_percent2, soc_percent, 2);
 
-      set_battery_params(battery_voltage, battery_current, battery_power, battery_soc, soc_percent);
+      // calculate load current
+      float solar_current = doc["solar_battery_current"];
+      float alternator_current = doc["dc_dc_current"];
+      float inverter_current = doc["inverter_current"];
+
+      float load_current = solar_current + alternator_current + inverter_current - battery_current;
+
+      if (inverter_current < 0) {
+        load_current = solar_current + alternator_current - battery_current;
+      }
+
+      Sensors.onlineGraph_01_solar_current = solar_current;
+      Sensors.onlineGraph_01_load_current = load_current;
+      floatToCharArray(Sensors.load_current, load_current, 2);
+
+      set_battery_params(battery_voltage, battery_current, battery_power, battery_soc, soc_percent, load_current);
     }
 
 
@@ -602,6 +621,10 @@ class ApiAppController {
       RemoteXY.battery_state_of_charge_percent = Sensors.battery_state_of_charge_percent;
       strcpy(RemoteXY.battery_state_of_charge_percent2, Sensors.battery_state_of_charge_percent2);
       strcpy(RemoteXY.battery_power, Sensors.battery_power);
+      strcpy(RemoteXY.load_current, Sensors.load_current);
+      RemoteXY.onlineGraph_01_load_current = Sensors.onlineGraph_01_load_current;
+      RemoteXY.onlineGraph_01_solar_current = Sensors.onlineGraph_01_solar_current;
+
 
       // Internet controls feedback
       RemoteXY.booster_power_feedback = Sensors.booster_power_feedback;
@@ -746,13 +769,13 @@ class ApiAppController {
     }
 
 
-    void set_battery_params(float voltage, float current, float power, float soc, float soc_percent) {
+    void set_battery_params(float voltage, float current, float power, float soc, float soc_percent, float load_current) {
       WiFiClient client;
       HTTPClient http;
 
       // Serial.print("[HTTP] begin...");
 
-      if (http.begin(client, mainURL + "/set_battery_params/" + voltage + "/" + current + "/" + power + "/" + soc + "/" + soc_percent)) {  // HTTP
+      if (http.begin(client, mainURL + "/set_battery_params/" + voltage + "/" + current + "/" + power + "/" + soc + "/" + soc_percent + "/" + load_current)) {  // HTTP
         // Serial.print("[HTTP] GET...");
         // start connection and send HTTP header
         int httpCode = http.GET();
