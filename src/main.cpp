@@ -17,7 +17,6 @@ void setup()
   ConnectWifi();
   api.get_all_data();
   RemoteXY = Sensors;
-
 }
 
 void loop() 

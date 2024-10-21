@@ -20,11 +20,12 @@
 //////////////////////////////////////////////
 
 // you can enable debug logging to Serial at 115200
-// #define REMOTEXY__DEBUGLOG    
+#define REMOTEXY__DEBUGLOG    
 
+
+// ********************* Cloud settings ********************
 // RemoteXY select connection mode and include library 
 #define REMOTEXY_MODE__WIFI_CLOUD
-
 
 // RemoteXY connection settings 
 #define REMOTEXY_WIFI_SSID "GL-AX1800-50f"
@@ -32,14 +33,23 @@
 #define REMOTEXY_CLOUD_SERVER "cloud.remotexy.com"
 #define REMOTEXY_CLOUD_PORT 6376
 #define REMOTEXY_CLOUD_TOKEN "07adb9420a6362df80bc7a79ba58607b"
+// **********************************************************
 
+// ********************* Local Settings *******************
+// #define REMOTEXY_MODE__WIFI
+
+// // RemoteXY connection settings 
+// #define REMOTEXY_WIFI_SSID "GL-AX1800-50f"
+// #define REMOTEXY_WIFI_PASSWORD "SpottsHotSpot"
+// #define REMOTEXY_SERVER_PORT 6377
+// *******************************************************
 
 #include <RemoteXY.h>
 
 // RemoteXY GUI configuration  
 #pragma pack(push, 1)  
-uint8_t RemoteXY_CONF[] =   // 3509 bytes
-  { 255,5,0,67,2,174,13,17,0,0,0,25,1,106,200,5,1,0,0,0,
+uint8_t RemoteXY_CONF[] =   // 3783 bytes
+  { 255,83,0,89,2,192,14,17,0,0,0,25,1,106,200,5,1,0,0,0,
   0,41,0,130,1,108,104,21,1,26,130,1,84,104,22,1,26,130,1,60,
   104,22,1,26,130,1,12,104,46,1,26,66,4,23,73,11,129,178,27,131,
   22,2,18,8,3,27,29,31,66,77,83,0,166,2,131,2,2,19,8,3,
@@ -186,35 +196,49 @@ uint8_t RemoteXY_CONF[] =   // 3509 bytes
   67,111,110,116,114,111,108,108,101,114,0,129,96,71,5,5,36,194,176,70,
   0,67,76,83,21,9,5,164,26,7,129,76,80,21,3,16,66,97,116,116,
   101,114,121,32,86,111,108,116,97,103,101,0,129,97,85,4,5,164,86,0,
-  16,0,10,34,19,17,17,48,65,149,31,79,78,0,31,79,70,70,0,70,
-  54,19,17,17,16,26,178,0,129,38,13,27,5,16,67,101,108,108,32,66,
-  111,111,115,116,101,114,0,10,6,47,17,17,48,65,149,31,79,78,0,31,
-  79,70,70,0,10,32,47,17,17,48,65,149,31,79,78,0,31,79,70,70,
-  0,10,57,47,17,17,48,65,149,31,79,78,0,31,79,70,70,0,10,82,
-  47,17,17,48,65,149,31,79,78,0,31,79,70,70,0,129,3,41,24,4,
-  16,87,97,116,101,114,32,72,101,97,116,101,114,0,129,34,41,14,4,16,
-  73,110,118,101,114,116,101,114,0,129,56,41,19,4,16,83,111,108,97,114,
-  32,70,97,110,115,0,129,80,41,22,4,16,69,120,104,97,117,115,116,32,
-  70,97,110,0,131,22,2,18,8,3,27,29,31,66,77,83,0,166,2,131,
+  34,0,130,2,131,102,20,1,26,130,2,71,102,58,1,26,130,2,12,102,
+  57,1,26,10,34,21,17,17,48,65,149,31,79,78,0,31,79,70,70,0,
+  70,54,21,17,17,16,26,178,0,129,38,15,27,5,16,67,101,108,108,32,
+  66,111,111,115,116,101,114,0,10,7,48,17,17,48,65,149,31,79,78,0,
+  31,79,70,70,0,10,32,48,17,17,48,65,149,31,79,78,0,31,79,70,
+  70,0,10,57,48,17,17,48,65,149,31,79,78,0,31,79,70,70,0,10,
+  82,48,17,17,48,65,149,31,79,78,0,31,79,70,70,0,129,4,42,24,
+  4,16,87,97,116,101,114,32,72,101,97,116,101,114,0,129,34,42,14,4,
+  16,73,110,118,101,114,116,101,114,0,129,56,42,19,4,16,83,111,108,97,
+  114,32,70,97,110,115,0,129,80,42,22,4,16,69,120,104,97,117,115,116,
+  32,70,97,110,0,131,22,2,18,8,3,27,29,31,66,77,83,0,166,2,
+  131,2,2,19,8,3,27,29,31,77,97,105,110,0,169,2,131,60,2,26,
+  8,3,27,29,31,67,111,110,116,114,111,108,115,0,106,2,131,41,2,18,
+  8,3,27,29,31,83,111,108,97,114,0,154,2,131,87,2,17,8,3,27,
+  29,31,84,101,109,112,0,170,1,7,3,141,100,7,36,2,25,2,76,129,
+  30,134,40,5,16,78,111,116,105,102,105,99,97,116,105,111,110,32,69,109,
+  97,105,108,0,4,14,93,51,8,128,178,25,67,79,93,19,8,1,178,26,
+  11,129,27,85,51,5,16,83,111,108,97,114,32,70,97,110,32,84,101,109,
+  112,101,114,97,116,117,114,101,0,129,99,94,4,4,178,194,176,70,0,4,
+  14,117,51,8,128,178,25,67,79,117,19,8,1,178,26,11,129,5,108,97,
+  5,16,69,108,101,99,116,114,105,99,97,108,32,67,97,98,105,110,101,116,
+  32,69,120,104,97,117,115,116,32,70,97,110,32,84,101,109,112,101,114,97,
+  116,117,114,101,0,129,99,118,4,4,178,194,176,70,0,129,9,74,87,6,
+  16,65,117,116,111,109,97,116,105,99,32,84,101,109,112,101,114,97,116,117,
+  114,101,32,83,101,116,116,105,110,103,115,0,129,4,96,7,3,16,57,48,
+  194,176,70,0,129,68,96,8,3,16,49,50,48,194,176,70,0,129,4,120,
+  7,3,16,56,48,194,176,70,0,129,68,120,8,3,16,49,48,48,194,176,
+  70,0,18,0,131,22,2,18,8,3,27,29,31,66,77,83,0,166,2,131,
   2,2,19,8,3,27,29,31,77,97,105,110,0,169,2,131,60,2,26,8,
   3,27,29,31,67,111,110,116,114,111,108,115,0,106,2,131,41,2,18,8,
   3,27,29,31,83,111,108,97,114,0,154,2,131,87,2,17,8,3,27,29,
-  31,84,101,109,112,0,170,1,18,0,131,22,2,18,8,3,27,29,31,66,
-  77,83,0,166,2,131,2,2,19,8,3,27,29,31,77,97,105,110,0,169,
-  2,131,60,2,26,8,3,27,29,31,67,111,110,116,114,111,108,115,0,106,
-  2,131,41,2,18,8,3,27,29,31,83,111,108,97,114,0,154,2,131,87,
-  2,17,8,3,27,29,31,84,101,109,112,0,170,1,129,8,31,19,3,16,
-  73,110,118,101,114,116,101,114,32,84,101,109,112,0,67,5,34,20,9,1,
-  35,26,11,129,25,36,5,5,35,194,176,70,0,129,8,17,21,3,16,73,
-  110,115,105,100,101,32,82,86,32,84,101,109,112,0,67,5,20,20,9,1,
-  35,25,11,129,25,22,5,5,35,194,176,70,0,129,39,17,19,3,16,79,
-  117,116,115,105,100,101,32,84,101,109,112,0,67,37,20,20,9,1,35,26,
-  11,129,57,22,5,5,35,194,176,70,0,129,68,17,32,3,16,69,108,101,
-  99,116,114,105,99,97,108,32,67,97,98,105,110,101,116,32,84,101,109,112,
-  0,67,70,20,20,9,1,35,26,11,129,90,22,5,5,35,194,176,70,0,
-  68,1,50,104,85,36,8,36,135,94,204,73,110,115,105,100,101,0,79,117,
-  116,115,105,100,101,0,69,108,101,99,46,32,67,97,98,105,110,101,116,0,
-  73,110,118,101,114,116,101,114,0 };
+  31,84,101,109,112,0,170,1,129,8,31,19,3,16,73,110,118,101,114,116,
+  101,114,32,84,101,109,112,0,67,5,34,20,9,1,35,26,11,129,25,36,
+  5,5,35,194,176,70,0,129,8,17,21,3,16,73,110,115,105,100,101,32,
+  82,86,32,84,101,109,112,0,67,5,20,20,9,1,35,25,11,129,25,22,
+  5,5,35,194,176,70,0,129,39,17,19,3,16,79,117,116,115,105,100,101,
+  32,84,101,109,112,0,67,37,20,20,9,1,35,26,11,129,57,22,5,5,
+  35,194,176,70,0,129,68,17,32,3,16,69,108,101,99,116,114,105,99,97,
+  108,32,67,97,98,105,110,101,116,32,84,101,109,112,0,67,70,20,20,9,
+  1,35,26,11,129,90,22,5,5,35,194,176,70,0,68,1,50,104,85,36,
+  8,36,135,94,204,73,110,115,105,100,101,0,79,117,116,115,105,100,101,0,
+  69,108,101,99,46,32,67,97,98,105,110,101,116,0,73,110,118,101,114,116,
+  101,114,0 };
   
 // this structure defines all the variables and events of your control interface 
 struct {
@@ -225,6 +249,9 @@ struct {
   uint8_t inverter; // =1 if state is ON, else =0
   uint8_t solar_fan; // =1 if state is ON, else =0
   uint8_t exhaust_fan; // =1 if state is ON, else =0
+  char notification_email[76]; // string UTF8 end zero
+  int8_t solar_fan_temp_slider; // from 0 to 100
+  int8_t exhaust_fan_temp_slider; // from 0 to 100
 
     // output variables
   int8_t battery_state_of_charge_percent; // from 0 to 100
@@ -318,6 +345,8 @@ struct {
   char solar3_controller_temp[7]; // string UTF8 end zero
   char solar3_battery_voltage[7]; // string UTF8 end zero
   uint8_t booster_power_feedback; // from 0 to 1
+  char solar_fan_temp_threshold[11]; // string UTF8 end zero
+  char exhaust_fan_temp_threshold[11]; // string UTF8 end zero
   char inverter_temp[11]; // string UTF8 end zero
   char inside_temperature[11]; // string UTF8 end zero
   char outside_temperature[11]; // string UTF8 end zero
@@ -330,7 +359,7 @@ struct {
     // other variable
   uint8_t connect_flag;  // =1 if wire connected, else =0
 
-} RemoteXY, Sensors;        
+} RemoteXY, Sensors;     
 #pragma pack(pop)
  
 /////////////////////////////////////////////
@@ -353,6 +382,8 @@ class ApiAppController {
   public:
     long get_data_timer = 0;
     long get_data_interval = 250; // ms
+    int solar_fan_auto = 0;
+    int exhaust_fan_auto = 0;
 
     ApiAppController() {
       // constructor
@@ -360,10 +391,11 @@ class ApiAppController {
 
     void run() {
       if ((currenttime - get_data_timer) >= get_data_interval) {
+        RemoteXY_callbacks();
         get_all_data();
         get_data_timer = currenttime;
       }
-      RemoteXY_callbacks();
+      
     }
 
 
@@ -385,7 +417,7 @@ class ApiAppController {
       floatToCharArray(Sensors.bms1_voltage, doc["bms1_voltage"], 2);
       floatToCharArray(Sensors.bms1_current, doc["bms1_current"], 2);
       Sensors.bms1_state_of_charge = doc["bms1_state_of_charge"];
-      floatToCharArray(Sensors.bms1_state_of_charge1, doc["bms1_state_of_charge1"], 2);
+      floatToCharArray(Sensors.bms1_state_of_charge1, doc["bms1_state_of_charge"], 2);
       floatToCharArray(Sensors.bms1_balance_capacity, doc["bms1_balance_capacity"], 0);
       floatToCharArray(Sensors.bms1_battery_temp, doc["bms1_battery_temp"], 2);
       floatToCharArray(Sensors.bms1_bms_temp, doc["bms1_bms_temp"], 2);
@@ -407,7 +439,7 @@ class ApiAppController {
       floatToCharArray(Sensors.bms2_voltage, doc["bms2_voltage"], 2);
       floatToCharArray(Sensors.bms2_current, doc["bms2_current"], 2);
       Sensors.bms2_state_of_charge = doc["bms2_state_of_charge"];
-      floatToCharArray(Sensors.bms2_state_of_charge1, doc["bms2_state_of_charge1"], 2);
+      floatToCharArray(Sensors.bms2_state_of_charge1, doc["bms2_state_of_charge"], 2);
       floatToCharArray(Sensors.bms2_balance_capacity, doc["bms2_balance_capacity"], 0);
       floatToCharArray(Sensors.bms2_battery_temp, doc["bms2_battery_temp"], 2);
       floatToCharArray(Sensors.bms2_bms_temp, doc["bms2_bms_temp"], 2);
@@ -429,7 +461,7 @@ class ApiAppController {
       floatToCharArray(Sensors.bms3_voltage, doc["bms3_voltage"], 2);
       floatToCharArray(Sensors.bms3_current, doc["bms3_current"], 2);
       Sensors.bms3_state_of_charge = doc["bms3_state_of_charge"];
-      floatToCharArray(Sensors.bms3_state_of_charge1, doc["bms3_state_of_charge1"], 2);
+      floatToCharArray(Sensors.bms3_state_of_charge1, doc["bms3_state_of_charge"], 2);
       floatToCharArray(Sensors.bms3_balance_capacity, doc["bms3_balance_capacity"], 0);
       floatToCharArray(Sensors.bms3_battery_temp, doc["bms3_battery_temp"], 2);
       floatToCharArray(Sensors.bms3_bms_temp, doc["bms3_bms_temp"], 2);
@@ -443,8 +475,14 @@ class ApiAppController {
       Sensors.water_heater = doc["water_heater"];
       Sensors.inverter = doc["inverter"];
       Sensors.solar_fan = doc["solar_fan"];
+      solar_fan_auto = doc["solar_fan_auto"];
       Sensors.exhaust_fan = doc["exhaust_fan"];
+      exhaust_fan_auto = doc["exhaust_fan_auto"];
       Sensors.booster_power_feedback = doc["booster_power_feedback"];
+      Sensors.solar_fan_temp_slider = doc["solar_fan_temp_slider"];
+      Sensors.exhaust_fan_temp_slider = doc["exhaust_fan_temp_slider"];
+      String notification_email = doc["notification_email"];
+      notification_email.toCharArray(Sensors.notification_email, notification_email.length() + 1);
 
       floatToCharArray(Sensors.inverter_current, doc["inverter_current"], 2);
       floatToCharArray(Sensors.dc_dc_current, doc["dc_dc_current"], 2);
@@ -458,6 +496,8 @@ class ApiAppController {
       Sensors.onlineGraph_02_inside_temp = doc["inside_temperature"];
       Sensors.onlineGraph_02_outside_temp = doc["outside_temperature"];
       Sensors.onlineGraph_02_electrical_temp = doc["electrical_cabinet_temperature"];
+      floatToCharArray(Sensors.solar_fan_temp_threshold, doc["solar_fan_temp_threshold"], 1);
+      floatToCharArray(Sensors.exhaust_fan_temp_threshold, doc["exhaust_fan_temp_threshold"], 1);
 
       // SOLAR
       floatToCharArray(Sensors.solar1_voltage, doc["solar1_voltage"], 2);
@@ -642,6 +682,8 @@ class ApiAppController {
       RemoteXY.onlineGraph_02_inside_temp = Sensors.onlineGraph_02_inside_temp;
       RemoteXY.onlineGraph_02_outside_temp = Sensors.onlineGraph_02_outside_temp;
       RemoteXY.onlineGraph_02_electrical_temp = Sensors.onlineGraph_02_electrical_temp;
+      strcpy(RemoteXY.solar_fan_temp_threshold, Sensors.solar_fan_temp_threshold);
+      strcpy(RemoteXY.exhaust_fan_temp_threshold, Sensors.exhaust_fan_temp_threshold);
 
       // solar
       strcpy(RemoteXY.solar1_voltage, Sensors.solar1_voltage);
@@ -687,12 +729,49 @@ class ApiAppController {
 
     if (Sensors.solar_fan != RemoteXY.solar_fan) {
       set_value("solar_fan", String(RemoteXY.solar_fan));
+      set_value("solar_fan_auto", String(RemoteXY.solar_fan));
       Sensors.solar_fan = RemoteXY.solar_fan;
+    } else if (solar_fan_auto != RemoteXY.solar_fan) {
+      set_value("solar_fan", String(solar_fan_auto));
+      RemoteXY.solar_fan = solar_fan_auto;
     }
 
     if (Sensors.exhaust_fan != RemoteXY.exhaust_fan) {
       set_value("exhaust_fan", String(RemoteXY.exhaust_fan));
+      set_value("exhaust_fan_auto", String(RemoteXY.exhaust_fan));
       Sensors.exhaust_fan = RemoteXY.exhaust_fan;
+    } else if (exhaust_fan_auto != RemoteXY.exhaust_fan) {
+      set_value("exhaust_fan", String(exhaust_fan_auto));
+      RemoteXY.exhaust_fan = exhaust_fan_auto;
+    }
+
+    if (strcmp(Sensors.notification_email, RemoteXY.notification_email) != 0) {
+      // check that length of email is > 0
+      if (strlen(RemoteXY.notification_email) == 0) {
+        set_value("notification_email", "blank");
+        strcpy(Sensors.notification_email, "blank");
+      } else {
+        set_value("notification_email", RemoteXY.notification_email);
+        strcpy(Sensors.notification_email, RemoteXY.notification_email);
+      }
+    }
+
+    if (Sensors.solar_fan_temp_slider != RemoteXY.solar_fan_temp_slider) {
+      set_value("solar_fan_temp_slider", String(RemoteXY.solar_fan_temp_slider));
+      Sensors.solar_fan_temp_slider = RemoteXY.solar_fan_temp_slider;
+      float threshold = map(RemoteXY.solar_fan_temp_slider, 0, 100, 90, 120);
+      set_value("solar_fan_temp_threshold", String(threshold));
+      floatToCharArray(Sensors.solar_fan_temp_threshold, threshold, 1);
+      floatToCharArray(RemoteXY.solar_fan_temp_threshold, threshold, 1);
+    }
+
+    if (Sensors.exhaust_fan_temp_slider != RemoteXY.exhaust_fan_temp_slider) {
+      set_value("exhaust_fan_temp_slider", String(RemoteXY.exhaust_fan_temp_slider));
+      Sensors.exhaust_fan_temp_slider = RemoteXY.exhaust_fan_temp_slider;
+      float threshold = map(RemoteXY.exhaust_fan_temp_slider, 0, 100, 80, 100);
+      set_value("exhaust_fan_temp_threshold", String(threshold));
+      floatToCharArray(Sensors.exhaust_fan_temp_threshold, threshold, 1);
+      floatToCharArray(RemoteXY.exhaust_fan_temp_threshold, threshold, 1);
     }
   }
 
